@@ -1,7 +1,10 @@
 package com.smalldogg.whereiam.domain.location;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smalldogg.whereiam.domain.location.command.SaveUserLocationCommand;
 import com.smalldogg.whereiam.domain.location.entity.UserLocation;
+import com.smalldogg.whereiam.event.location.LocationEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +13,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LocationServiceImpl implements LocationService {
 
+    private final ObjectMapper objectMapper;
     private final LocationRepository locationRepository;
+    private final LocationEventProducer locationEventProducer;
 
     @Override
     @Transactional
     public void saveLocation(SaveUserLocationCommand command) {
         UserLocation userLocation = UserLocation.of(command);
         locationRepository.save(userLocation);
+
+        try {
+            locationEventProducer.send(userLocation.getUserSeq(), toPayload(userLocation));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String toPayload(UserLocation userLocation) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(userLocation);
     }
 }

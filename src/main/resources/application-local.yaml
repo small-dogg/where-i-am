@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://jerry.world:32222/whereiam
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: jerry.world:30092
+    acks: all
+    producer:
+      transaction-id-prefix: where-i-am-tx
+      retries: 2100000000

@@ -36,8 +36,7 @@ public class KafkaProducerConfig {
         DefaultKafkaProducerFactory<String, String> factory =
                 new DefaultKafkaProducerFactory<>(props);
 
-        // 🔥 이게 있어야 "트랜잭션 프로듀서"
-        factory.setTransactionIdPrefix("whereiam-location-tx-");
+        factory.setTransactionIdPrefix("where-i-am-tx-");
 
         return factory;
     }

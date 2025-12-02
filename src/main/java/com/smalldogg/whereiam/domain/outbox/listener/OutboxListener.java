@@ -15,7 +15,7 @@ public class OutboxListener {
 
     private final OutboxEventRepository outboxEventRepository;
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handle(OutboxEvent event) {
         outboxEventRepository.save(event);

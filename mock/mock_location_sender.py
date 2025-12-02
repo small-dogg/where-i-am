@@ -49,7 +49,7 @@ def generate_and_send_positions(
         lon = max(CENTER_LON - limit_delta, min(CENTER_LON + limit_delta, lon))
 
         # 1초 대기
-        time.sleep(0.01)
+        time.sleep(0.5)
 
 
 if __name__ == "__main__":
